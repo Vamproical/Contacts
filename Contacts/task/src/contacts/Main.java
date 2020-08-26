@@ -11,6 +11,7 @@ public class Main {
         String surname = scanner.nextLine();
         System.out.println("Enter the number:");
         String number = scanner.nextLine();
+        Contact contact = new Contact(name,surname,number);
         System.out.println();
         System.out.println("A record created!");
         System.out.println("A Phone Book with a single record created!");
