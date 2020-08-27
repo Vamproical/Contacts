@@ -1,8 +1,11 @@
 package contacts;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Contacts {
     private final List<Contact> contacts = new ArrayList<>();
@@ -46,7 +49,12 @@ public class Contacts {
         String surname = scanner.nextLine();
         System.out.println("Enter the number:");
         String phoneNumber = scanner.nextLine();
-        contacts.add(new Contact(name, surname, phoneNumber));
+        if (isCorrectPhoneNumber(phoneNumber)) {
+            contacts.add(new Contact(name, surname, phoneNumber));
+        } else {
+            System.out.println("Wrong number format!");
+            contacts.add(new Contact(name, surname));
+        }
         System.out.println("The record added.");
     }
 
@@ -90,7 +98,12 @@ public class Contacts {
                     System.out.println("Enter number: ");
                     String number = scanner.nextLine();
                     Contact contactForNumber = contacts.get(--record);
-                    contactForNumber.setPhone(number);
+                    if (isCorrectPhoneNumber(number)) {
+                        contactForNumber.setPhone(number);
+                    } else {
+                        System.out.println("Wrong number format!");
+                        contactForNumber.setPhone("");
+                    }
                     contacts.set(record, contactForNumber);
                     break;
             }
@@ -104,5 +117,16 @@ public class Contacts {
             System.out.println(i + ". " + contact.toString());
             ++i;
         }
+    }
+
+    private boolean isCorrectPhoneNumber(String number) {
+        String withoutParentheses = "[+]?[\\da-z]+([ -][\\da-z]{2,})*";
+        String firstGroupParentheses = "[+]?\\([\\da-z]+\\)([ -][\\da-z]{2,})*";
+        String secondGroupParentheses = "[+]?[\\da-z]+([ -][\\da-z]{2,})*([ -]\\([\\da-z]{2,})\\)([ -][\\da-z]{2,})*";
+        Pattern pattern = Pattern.compile(withoutParentheses +
+                "|" + firstGroupParentheses +
+                "|" + secondGroupParentheses, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(number);
+        return matcher.matches();
     }
 }
