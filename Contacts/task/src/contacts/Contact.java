@@ -1,45 +1,56 @@
 package contacts;
 
-public class Contact {
+import java.time.LocalDateTime;
+
+public abstract class Contact {
     private String name;
-    private String surname;
     private String phone;
+    private final LocalDateTime creation;
+    private LocalDateTime lastEdit;
 
-    public Contact(String name, String surname, String phone) {
+    public Contact(String name, String phone) {
         this.name = name;
-        this.surname = surname;
         this.phone = phone;
+        creation = LocalDateTime.now();
+        lastEdit = creation;
     }
 
-    public Contact(String name, String surname) {
-        this.name = name;
-        this.surname = surname;
-        this.phone = "";
-    }
+    abstract void info();
 
     public boolean hasPhone() {
         return !phone.equals("");
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        lastEdit = LocalDateTime.now();
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+        lastEdit = LocalDateTime.now();
+    }
+
+    public void setLastEdit(LocalDateTime lastEdit) {
+        this.lastEdit = lastEdit;
+    }
+
+    public LocalDateTime getCreation() {
+        return creation;
+    }
+
+    public LocalDateTime getLastEdit() {
+        return lastEdit;
     }
 
     @Override
-    public String toString() {
-        if (phone.equals("")) {
-            return name + " " + surname + ", " + "[no number]";
-        }
-        else {
-            return name + " " + surname + ", " + phone;
-        }
-    }
+    public abstract String toString();
 }

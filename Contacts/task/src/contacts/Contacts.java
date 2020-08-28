@@ -1,7 +1,8 @@
 package contacts;
 
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -29,8 +30,8 @@ public class Contacts {
                 case "count":
                     System.out.println("The Phone Book has " + contacts.size() + " records.");
                     break;
-                case "list":
-                    printContacts();
+                case "info":
+                    info();
                     break;
                 case "exit":
                     isExit = true;
@@ -39,21 +40,67 @@ public class Contacts {
                     System.out.println("Incorrect command!");
                     break;
             }
+            System.out.println();
         }
     }
 
     private void add() {
-        System.out.println("Enter the name:");
+        System.out.println("Enter the type (person, organization): ");
+        String type = scanner.nextLine();
+        switch (type) {
+            case "person":
+                addPerson();
+                break;
+            case "organization":
+                addOrganization();
+                break;
+        }
+
+    }
+
+    private void addPerson() {
+        System.out.println("Enter the name: ");
         String name = scanner.nextLine();
-        System.out.println("Enter the surname:");
+        System.out.println("Enter the surname: ");
         String surname = scanner.nextLine();
+        System.out.println("Enter the birth date: ");
+        String birthDate = scanner.nextLine();
+        LocalDate date;
+        try {
+            date = LocalDate.parse(birthDate);
+        } catch (DateTimeException e) {
+            System.out.println("Bad birth date!");
+            date = null;
+        }
+        System.out.println("Enter the gender(M, F): ");
+        String gender = scanner.nextLine();
+        if (!gender.equals("M") && !gender.equals("F")) {
+            System.out.println("Bad gender!");
+            gender = null;
+        }
+        System.out.println("Enter the number: ");
+        String phoneNumber = scanner.nextLine();
+        if (isCorrectPhoneNumber(phoneNumber)) {
+            contacts.add(new PersonContacts(name, phoneNumber, surname, date, gender));
+        } else {
+            System.out.println("Wrong number format!");
+            contacts.add(new PersonContacts(name, "", surname, date, gender));
+        }
+        System.out.println("The record added.");
+    }
+
+    private void addOrganization() {
+        System.out.println("Enter the organization name:");
+        String name = scanner.nextLine();
+        System.out.println("Enter the address:");
+        String address = scanner.nextLine();
         System.out.println("Enter the number:");
         String phoneNumber = scanner.nextLine();
         if (isCorrectPhoneNumber(phoneNumber)) {
-            contacts.add(new Contact(name, surname, phoneNumber));
+            contacts.add(new OrganizationContacts(name, phoneNumber, address));
         } else {
             System.out.println("Wrong number format!");
-            contacts.add(new Contact(name, surname));
+            contacts.add(new OrganizationContacts(name, "", address));
         }
         System.out.println("The record added.");
     }
@@ -77,38 +124,112 @@ public class Contacts {
             printContacts();
             System.out.println("Select a record:");
             int record = Integer.parseInt(scanner.nextLine());
-            System.out.println("Select a field (name, surname, number):");
-            String field = scanner.nextLine();
-            switch (field) {
-                case "name":
-                    System.out.println("Enter name: ");
-                    String name = scanner.nextLine();
-                    Contact contactForName = contacts.get(--record);
-                    contactForName.setName(name);
-                    contacts.set(record, contactForName);
-                    break;
-                case "surname":
-                    System.out.println("Enter surname: ");
-                    String surname = scanner.nextLine();
-                    Contact contactForSurname = contacts.get(--record);
-                    contactForSurname.setSurname(surname);
-                    contacts.set(record, contactForSurname);
-                    break;
-                case "number":
-                    System.out.println("Enter number: ");
-                    String number = scanner.nextLine();
-                    Contact contactForNumber = contacts.get(--record);
-                    if (isCorrectPhoneNumber(number)) {
-                        contactForNumber.setPhone(number);
-                    } else {
-                        System.out.println("Wrong number format!");
-                        contactForNumber.setPhone("");
-                    }
-                    contacts.set(record, contactForNumber);
-                    break;
+            if (contacts.get(--record) instanceof PersonContacts) {
+                editPerson(record);
+            } else {
+                editOrganization(record);
             }
-            System.out.println("The record updated!");
         }
+    }
+
+    private void editPerson(int index) {
+        System.out.println("Select a field (name, surname, birth, gender, number):");
+        String field = scanner.nextLine();
+        switch (field) {
+            case "name":
+                System.out.println("Enter name: ");
+                String name = scanner.nextLine();
+                Contact contactForName = contacts.get(index);
+                contactForName.setName(name);
+                contacts.set(index, contactForName);
+                break;
+            case "surname":
+                System.out.println("Enter surname: ");
+                String surname = scanner.nextLine();
+                PersonContacts contactForSurname = (PersonContacts) contacts.get(index);
+                contactForSurname.setSurname(surname);
+                contacts.set(index, contactForSurname);
+                break;
+            case "number":
+                System.out.println("Enter number: ");
+                String number = scanner.nextLine();
+                Contact contactForNumber = contacts.get(index);
+                if (isCorrectPhoneNumber(number)) {
+                    contactForNumber.setPhone(number);
+                } else {
+                    System.out.println("Wrong number format!");
+                    contactForNumber.setPhone("");
+                }
+                contacts.set(index, contactForNumber);
+                break;
+            case "gender":
+                System.out.println("Enter the gender(M, F): ");
+                String gender = scanner.nextLine();
+                if (!gender.equals("M") && !gender.equals("F")) {
+                    System.out.println("Bad gender!");
+                    gender = null;
+                }
+                PersonContacts genderForPerson = (PersonContacts) contacts.get(index);
+                genderForPerson.setGender(gender);
+                contacts.set(index, genderForPerson);
+                break;
+            case "birth":
+                System.out.println("Enter the birth date: ");
+                String birth = scanner.nextLine();
+                LocalDate date;
+                try {
+                    date = LocalDate.parse(birth);
+                } catch (DateTimeException e) {
+                    System.out.println("Bad birth date!");
+                    date = null;
+                }
+                PersonContacts birthForPerson = (PersonContacts) contacts.get(index);
+                birthForPerson.setBirthDay(date);
+                contacts.set(index, birthForPerson);
+                break;
+        }
+        System.out.println("The record updated!");
+    }
+
+    private void editOrganization(int index) {
+        System.out.println("Select a field (name, address, number):");
+        String field = scanner.nextLine();
+        switch (field) {
+            case "name":
+                System.out.println("Enter the organization name: ");
+                String name = scanner.nextLine();
+                Contact contactForName = contacts.get(index);
+                contactForName.setName(name);
+                contacts.set(index, contactForName);
+                break;
+            case "address":
+                System.out.println("Enter the address: ");
+                String address = scanner.nextLine();
+                OrganizationContacts contactForAddress = (OrganizationContacts) contacts.get(index);
+                contactForAddress.setAddress(address);
+                contacts.set(index, contactForAddress);
+                break;
+            case "number":
+                System.out.println("Enter number: ");
+                String number = scanner.nextLine();
+                Contact contactForNumber = contacts.get(index);
+                if (isCorrectPhoneNumber(number)) {
+                    contactForNumber.setPhone(number);
+                } else {
+                    System.out.println("Wrong number format!");
+                    contactForNumber.setPhone("");
+                }
+                contacts.set(index, contactForNumber);
+                break;
+        }
+        System.out.println("The record updated!");
+    }
+
+    private void info() {
+        printContacts();
+        System.out.println("Enter index to show info: ");
+        int index = Integer.parseInt(scanner.nextLine());
+        contacts.get(--index).info();
     }
 
     private void printContacts() {
