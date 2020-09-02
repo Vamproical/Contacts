@@ -3,16 +3,13 @@ package contacts;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class PersonContacts extends Contact{
+public class PersonContacts extends Contact {
     private String surname;
     private LocalDate birthDay;
     private String gender;
 
-    public PersonContacts(String name, String phone, String surname, LocalDate birthDay, String gender) {
-        super(name,phone);
-        this.surname = surname;
-        this.birthDay = birthDay;
-        this.gender = gender;
+    public PersonContacts() {
+        super();
     }
 
     public void setSurname(String surname) {
@@ -48,9 +45,11 @@ public class PersonContacts extends Contact{
         System.out.println("Time created: " + super.getCreation());
         System.out.println("Time last edit: " + super.getLastEdit());
     }
+
     public String checkNull(String check) {
         return check == null ? "[no data]" : check;
     }
+
     @Override
     public String toString() {
         return super.getName() + " " + surname;

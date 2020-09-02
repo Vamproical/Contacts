@@ -8,9 +8,7 @@ public abstract class Contact {
     private final LocalDateTime creation;
     private LocalDateTime lastEdit;
 
-    public Contact(String name, String phone) {
-        this.name = name;
-        this.phone = phone;
+    public Contact() {
         creation = LocalDateTime.now();
         lastEdit = creation;
     }

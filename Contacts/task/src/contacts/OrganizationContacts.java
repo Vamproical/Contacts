@@ -3,9 +3,8 @@ package contacts;
 public class OrganizationContacts extends Contact {
     private String address;
 
-    public OrganizationContacts(String name, String phone, String address) {
-        super(name, phone);
-        this.address = address;
+    public OrganizationContacts() {
+        super();
     }
 
     public void setAddress(String address) {
