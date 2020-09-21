@@ -21,6 +21,6 @@ public class OrganizationContacts extends Contact {
 
     @Override
     public String toString() {
-        return super.getName();
+        return super.getName() + " " + address + super.getPhone();
     }
 }

@@ -13,7 +13,7 @@ public abstract class Contact {
         lastEdit = creation;
     }
 
-    abstract void info();
+    public abstract void info();
 
     public boolean hasPhone() {
         return !phone.equals("");

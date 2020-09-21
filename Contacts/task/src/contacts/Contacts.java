@@ -9,19 +9,21 @@ import java.util.Scanner;
 public class Contacts {
     private final Scanner scanner = new Scanner(System.in);
 
+    public Contacts() {
+
+    }
+
     public void menu() {
         Controller controller = new Controller();
-
         Map<String, Command> commands = new HashMap<>();
         commands.put("add", new AddCommand());
-        commands.put("edit", new EditCommand());
-        commands.put("remove", new RemoveCommand());
-        commands.put("info", new InfoCommand());
+        commands.put("list", new InfoCommand());
+        commands.put("search", new SearchCommand());
         commands.put("count", new CountCommand());
 
         boolean status = true;
         do {
-            System.out.println("Enter action (add, remove, edit, count, info, exit):");
+            System.out.println("[menu]Enter action (add, list, search, count, exit):");
             String action = scanner.next();
             if (action.equals("exit")) {
                 status = false;

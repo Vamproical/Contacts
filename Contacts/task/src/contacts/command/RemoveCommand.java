@@ -18,4 +18,9 @@ public class RemoveCommand implements Command {
         ContactBook.removeContact(index);
         System.out.println("The record removed!");
     }
+
+    public static void execute(int index) {
+        ContactBook.removeContact(index);
+        System.out.println("The record removed!");
+    }
 }

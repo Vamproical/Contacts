@@ -52,6 +52,8 @@ public class PersonContacts extends Contact {
 
     @Override
     public String toString() {
-        return super.getName() + " " + surname;
+        return super.getName() + " " + surname
+                + " " + (birthDay == null ? "no data" : birthDay)
+                + " " + checkNull(gender) + " " + super.getPhone();
     }
 }

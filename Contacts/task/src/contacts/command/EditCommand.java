@@ -29,7 +29,7 @@ public class EditCommand implements Command {
         }
     }
 
-    private void editPerson(int index) {
+    public void editPerson(int index) {
         System.out.println("Select a field (name, surname, birth, gender, number):");
         String field = scanner.nextLine();
         System.out.println("Enter " + field + ":");
@@ -72,7 +72,7 @@ public class EditCommand implements Command {
         System.out.println("The record updated!");
     }
 
-    private void editOrganization(int index) {
+    public void editOrganization(int index) {
         System.out.println("Select a field (name, address, number):");
         String field = scanner.nextLine();
         System.out.println("Enter " + field + ":");
